@@ -1,18 +1,5 @@
-import express from "express";
-import cors from "cors";
+import { app } from "./server/server.js";
 
-const app = express();
-
-app.use(cors());
-
-app.get("/", (req, res) => {
-  res.send("Teste da api");
-});
-
-app.get("/usuario", (req, res) => {
-  res.send("ok");
-});
-
-app.listen(8080, () => {
+app.listen(process.env.PORT || 8080, () => {
   console.log("Api rodado na porta 8080");
 });
