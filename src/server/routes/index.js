@@ -1,11 +1,16 @@
 import { Router } from "express";
-import { singUp, singUpValidation } from "../controller/login/SignUp.js";
+import { UsuarioController } from "../controller/usuario";
 const router = Router();
 
 router.get("/", (req, res) => {
   res.send("Teste da api");
 });
 
-router.post("/login", loginValidation, login);
+// Cadastro de usuario e login
+router.post(
+  "/usuario",
+  UsuarioController.createValidation,
+  UsuarioController.createUp
+);
 
 export { router };
