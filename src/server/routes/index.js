@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { UsuarioController } from "../controller/usuario/index.js";
+import { login, loginValidation } from "../controller/login/login.js";
 const router = Router();
 
 router.get("/", (req, res) => {
@@ -7,10 +7,6 @@ router.get("/", (req, res) => {
 });
 
 // Cadastro de usuario e login
-router.post(
-  "/usuario",
-  UsuarioController.createValidation,
-  UsuarioController.createUp
-);
+router.post("/login", loginValidation, login);
 
 export { router };
