@@ -1,11 +1,18 @@
 import path from "path";
 import { fileURLToPath } from "url";
 
-// Obter __dirname em um módulo ES
+// Obter __dirname corretamente
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+let __dirname = path.dirname(__filename);
 
-// Configurações do banco de dados
+// Corrigir caso o caminho contenha uma duplicação de "src"
+if (__dirname.includes("/src/src/")) {
+  __dirname = __dirname.replace("/src/src/", "/src/");
+}
+
+console.log("__dirname corrigido:", __dirname);
+
+// Configurações comuns do banco de dados
 const commonConfig = {
   migrations: {
     directory: path.resolve(__dirname, "..", "migrations"),
@@ -37,13 +44,12 @@ const development = {
   },
 };
 
-const production = {
-  ...development,
-};
+// Produção = Desenvolvimento
+const production = { ...development };
 
 const test = {
   ...commonConfig,
-  client: "sqlite3", // Ajuste conforme o banco de dados utilizado no ambiente de teste
+  client: "sqlite3",
   connection: {
     filename: path.resolve(
       __dirname,
@@ -56,18 +62,10 @@ const test = {
   },
 };
 
-console.log("__dirname:", __dirname);
-console.log("Migrations Path:", path.resolve(__dirname, "..", "migrations"));
-console.log(
-  "Database Path:",
-  path.resolve(__dirname, "..", "..", "..", "..", "database.sqlite")
-);
-
-// Carregar a configuração correta dependendo do ambiente
 const knexConfig = {
   development,
-  production,
+  production, // Agora produção é exatamente igual a desenvolvimento
   test,
 };
 
-export default knexConfig; // Exporte o objeto inteiro
+export default knexConfig;
