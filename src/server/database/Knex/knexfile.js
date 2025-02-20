@@ -10,15 +10,16 @@ if (__dirname.includes("/src/src/")) {
   __dirname = __dirname.replace("/src/src/", "/src/");
 }
 
-console.log("__dirname corrigido:", __dirname);
+// Diretório base do projeto
+const BASE_DIR = path.resolve(__dirname, "..", "..", "..");
 
 // Configurações comuns do banco de dados
 const commonConfig = {
   migrations: {
-    directory: path.resolve(__dirname, "..", "migrations"),
+    directory: path.join(BASE_DIR, "server", "database", "migrations"),
   },
   seeds: {
-    directory: path.resolve(__dirname, "..", "seeds"),
+    directory: path.join(BASE_DIR, "server", "database", "seeds"),
   },
 };
 
@@ -26,14 +27,7 @@ const development = {
   ...commonConfig,
   client: "sqlite3",
   connection: {
-    filename: path.resolve(
-      __dirname,
-      "..",
-      "..",
-      "..",
-      "..",
-      "database.sqlite"
-    ),
+    filename: path.join(BASE_DIR, "database.sqlite"),
   },
   useNullAsDefault: true,
   pool: {
@@ -51,20 +45,13 @@ const test = {
   ...commonConfig,
   client: "sqlite3",
   connection: {
-    filename: path.resolve(
-      __dirname,
-      "..",
-      "..",
-      "..",
-      "..",
-      "test_database.sqlite"
-    ),
+    filename: path.join(BASE_DIR, "test_database.sqlite"),
   },
 };
 
 const knexConfig = {
   development,
-  production, // Agora produção é exatamente igual a desenvolvimento
+  production,
   test,
 };
 
