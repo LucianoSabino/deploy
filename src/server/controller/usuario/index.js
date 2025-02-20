@@ -1,5 +1,6 @@
-import * as create from "./Create.js";
+import { createUp, createValidation } from "./create.js";
 
 export const UsuarioController = {
-  ...create,
+  createUp,
+  createValidation,
 };
