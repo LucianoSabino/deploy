@@ -1,29 +1,25 @@
-// knexfile.js
+import path from "path";
+import { fileURLToPath } from "url";
+import "dotenv/config";
 
-const development = {
-  client: "sqlite3",
-  connection: {
-    filename: "./database.sqlite3", // Caminho para o arquivo do banco SQLite
-  },
-  useNullAsDefault: true, // Necessário para o SQLite
+// Resolve corretamente o __dirname para compatibilidade com Windows e Linux
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+// Configuração comum para todas as versões
+const commonConfig = {
   migrations: {
-    directory: "./migrations", // Caminho para a pasta de migrações
+    directory: path.resolve(__dirname, "..", "migrations"),
   },
-  pool: {
-    afterCreate: (connection, done) => {
-      connection.run("PRAGMA foreign_keys = ON");
-      done();
-    },
+  seeds: {
+    directory: path.resolve(__dirname, "..", "seeds"),
   },
 };
 
-const production = {
-  ...development,
-};
-
-const test = {
-  client: "sqlite3", // Ajuste conforme o banco de dados utilizado no ambiente de teste
+// Configuração para cada ambiente
+const development = {
+  ...commonConfig,
+  client: "sqlite3",
   connection: {
     filename: path.resolve(
       __dirname,
@@ -31,16 +27,28 @@ const test = {
       "..",
       "..",
       "..",
-      "test_database.sqlite"
+      "database.sqlite"
     ),
+  },
+  useNullAsDefault: true,
+  pool: {
+    afterCreate: (conn, done) => {
+      conn.run("PRAGMA foreign_keys = ON");
+      done();
+    },
   },
 };
 
-// Carregar a configuração correta dependendo do ambiente
-const knexConfig = {
-  development,
-  production,
-  test,
+const test = {
+  ...development,
+  connection: ":memory:", // Banco em memória para testes
 };
 
-export default knexConfig; // Exporte o objeto inteiro
+const production = {
+  ...development,
+};
+
+// Exporta todas as configurações
+const knexConfig = { development, test, production };
+
+export default knexConfig;
