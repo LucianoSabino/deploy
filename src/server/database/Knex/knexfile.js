@@ -56,6 +56,13 @@ const test = {
   },
 };
 
+console.log("__dirname:", __dirname);
+console.log("Migrations Path:", path.resolve(__dirname, "..", "migrations"));
+console.log(
+  "Database Path:",
+  path.resolve(__dirname, "..", "..", "..", "..", "database.sqlite")
+);
+
 // Carregar a configuração correta dependendo do ambiente
 const knexConfig = {
   development,
