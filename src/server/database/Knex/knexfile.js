@@ -1,19 +1,19 @@
 import path from "path";
 import { fileURLToPath } from "url";
+import process from "process";
 
-// Obter __dirname corretamente
+// Obter o diretório raiz do projeto
 const __filename = fileURLToPath(import.meta.url);
-let __dirname = path.dirname(__filename);
+const __dirname = path.dirname(__filename);
+const BASE_DIR = process.cwd(); // Caminho do diretório raiz no servidor
 
-// Corrigir caso o caminho contenha uma duplicação de "src"
-if (__dirname.includes("/src/src/")) {
-  __dirname = __dirname.replace("/src/src/", "/src/");
-}
+console.log("BASE_DIR:", BASE_DIR);
+console.log(
+  "Migrations Path:",
+  path.join(BASE_DIR, "server", "database", "migrations")
+);
+console.log("Database Path:", path.join(BASE_DIR, "database.sqlite"));
 
-// Diretório base do projeto
-const BASE_DIR = path.resolve(__dirname, "..", "..", "..");
-
-// Configurações comuns do banco de dados
 const commonConfig = {
   migrations: {
     directory: path.join(BASE_DIR, "server", "database", "migrations"),
