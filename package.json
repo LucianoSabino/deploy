@@ -4,7 +4,8 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "start": "node src/index.js"
+    "knex:migrate": "knex migrate:latest --knexfile ./src/server/database/Knex/knexfile.js",
+    "start": "npm run knex:migrate && node index.js"
   },
   "keywords": [],
   "author": "",
