@@ -1,11 +1,12 @@
 import path from "path";
 import { fileURLToPath } from "url";
-import process from "process";
 
-// Obter o diretório raiz do projeto
+// Obter o caminho do próprio arquivo knexfile.js
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const BASE_DIR = process.cwd(); // Caminho do diretório raiz no servidor
+
+// Caminho base (assumindo que o knexfile está na raiz do projeto)
+const BASE_DIR = path.resolve(__dirname, ".");
 
 console.log("BASE_DIR:", BASE_DIR);
 console.log(
@@ -15,8 +16,11 @@ console.log(
 console.log("Database Path:", path.join(BASE_DIR, "database.sqlite"));
 
 const commonConfig = {
+  client: "sqlite3",
+  useNullAsDefault: true,
   migrations: {
     directory: path.join(BASE_DIR, "server", "database", "migrations"),
+    extension: "js",
   },
   seeds: {
     directory: path.join(BASE_DIR, "server", "database", "seeds"),
@@ -25,11 +29,9 @@ const commonConfig = {
 
 const development = {
   ...commonConfig,
-  client: "sqlite3",
   connection: {
     filename: path.join(BASE_DIR, "database.sqlite"),
   },
-  useNullAsDefault: true,
   pool: {
     afterCreate: (connection, done) => {
       connection.run("PRAGMA foreign_keys = ON");
@@ -38,21 +40,18 @@ const development = {
   },
 };
 
-// Produção = Desenvolvimento
+// Produção igual ao desenvolvimento (para SQLite)
 const production = { ...development };
 
 const test = {
   ...commonConfig,
-  client: "sqlite3",
   connection: {
     filename: path.join(BASE_DIR, "test_database.sqlite"),
   },
 };
 
-const knexConfig = {
+export default {
   development,
   production,
   test,
 };
-
-export default knexConfig;
